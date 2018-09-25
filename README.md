@@ -4,6 +4,6 @@ In this repository you will find all the material used in the meetups organized 
 
 ### Contact
 
-* Jorge Ordovas (Twitter: @joobid)
+* Jorge Ordovás (Twitter: @joobid)
 * Alfonso de la Rocha (Twitter: @adlrocha, email: alfonso.delarochagomez@telefonica.com)
 * Diego Escalona (Twitter: @diegoescalonaro, email: diegoescalonarodrigez@telefonica.com)
