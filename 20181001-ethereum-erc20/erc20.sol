@@ -1,5 +1,5 @@
 
-/* Token ERC20 Smart Contract  */
+/* Token ERC20 - Smart Contract  */
     
 pragma solidity ^0.4.25;
     
@@ -8,7 +8,8 @@ import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.so
     
 contract Token is ERC20 {
     using SafeMath for uint256;
-            
+    
+    /* --- Atributos del TOKEN --- */ 
     address public owner; // token owner
     string public name;        // token name
     string public symbol;          // token symbol
@@ -18,7 +19,7 @@ contract Token is ERC20 {
     mapping (address => uint256) private balances;    // TOKEN BALANCES
     mapping (address => mapping (address => uint256)) private allowed;
     
-    /* ---  Constructor ---  */  
+    /* ---  Metodo Constructor ---  */  
     constructor(string _name, string _symbol, uint8 _decimals, uint128 _initialTotalSupply) public{
         owner = msg.sender;
         name = _name;
@@ -46,17 +47,8 @@ contract Token is ERC20 {
         return balances[_tokenOwner];
     }
     
-      /**
-       * @dev Function to check the amount of tokens that an owner allowed to a spender.
-       * @param _tokenOwner address The address which owns the funds.
-       * @param _spender address The address which will spend the funds.
-       * @return A uint256 specifying the amount of tokens still available for the spender.
-       */
-    function allowance(address _tokenOwner, address _spender) public view returns (uint256){
-        return allowed[_tokenOwner][_spender];
-    }
     
-      /**
+          /**
       * @dev Transfer token for a specified address
       * @param _to The address to transfer to.
       * @param _value The amount to be transferred.
@@ -76,7 +68,6 @@ contract Token is ERC20 {
        * Beware that changing an allowance with this method brings the risk that someone may use both the old
        * and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this
        * race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards:
-       * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
        * @param _spender The address which will spend the funds.
        * @param _value The amount of tokens to be spent.
        */
@@ -84,6 +75,16 @@ contract Token is ERC20 {
         allowed[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
+    }
+    
+      /**
+       * @dev Function to check the amount of tokens that an owner allowed to a spender.
+       * @param _tokenOwner address The address which owns the funds.
+       * @param _spender address The address which will spend the funds.
+       * @return A uint256 specifying the amount of tokens still available for the spender.
+       */
+    function allowance(address _tokenOwner, address _spender) public view returns (uint256){
+        return allowed[_tokenOwner][_spender];
     }
     
       /**
@@ -109,11 +110,10 @@ contract Token is ERC20 {
        * approve should be called when allowed[_spender] == 0. To increment
        * allowed value is better to use this function to avoid 2 calls (and wait until
        * the first transaction is mined)
-       * From MonolithDAO Token.sol
        * @param _spender The address which will spend the funds.
        * @param _addedValue The amount of tokens to increase the allowance by.
        */
-    function increaseApproval(address _spender,uint256 _addedValue) public returns (bool){
+    function increaseAllowance(address _spender,uint256 _addedValue) public returns (bool){
         allowed[msg.sender][_spender] = (
         allowed[msg.sender][_spender].add(_addedValue));
         emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
@@ -125,11 +125,10 @@ contract Token is ERC20 {
        * approve should be called when allowed[_spender] == 0. To decrement
        * allowed value is better to use this function to avoid 2 calls (and wait until
        * the first transaction is mined)
-       * From MonolithDAO Token.sol
        * @param _spender The address which will spend the funds.
        * @param _subtractedValue The amount of tokens to decrease the allowance by.
        */
-    function decreaseApproval(address _spender, uint256 _subtractedValue) public returns (bool){
+    function decreaseAllowance(address _spender, uint256 _subtractedValue) public returns (bool){
         uint256 oldValue = allowed[msg.sender][_spender];
         if (_subtractedValue >= oldValue) {
           allowed[msg.sender][_spender] = 0;
@@ -139,51 +138,5 @@ contract Token is ERC20 {
         emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
         return true;
     }
-    
-      /**
-       * @dev Internal function that mints an amount of the token and assigns it to
-       * an account. This encapsulates the modification of balances such that the
-       * proper events are emitted.
-       * @param _account The account that will receive the created tokens.
-       * @param _amount The amount that will be created.
-       */
-    function _mint(address _account, uint256 _amount) internal {
-        require(_account != 0);
-        _totalSupply = _totalSupply.add(_amount);
-        balances[_account] = balances[_account].add(_amount);
-        emit Transfer(address(0), _account, _amount);
-    }
-    
-      /**
-       * @dev Internal function that burns an amount of the token of a given
-       * account.
-       * @param _account The account whose tokens will be burnt.
-       * @param _amount The amount that will be burnt.
-       */
-    function _burn(address _account, uint256 _amount) internal {
-        require(_account != 0);
-        require(_amount <= balances[_account]);
-    
-        _totalSupply = _totalSupply.sub(_amount);
-        balances[_account] = balances[_account].sub(_amount);
-        emit Transfer(_account, address(0), _amount);
-    }
-    
-      /**
-       * @dev Internal function that burns an amount of the token of a given
-       * account, deducting from the sender's allowance for said account. Uses the
-       * internal _burn function.
-       * @param _account The account whose tokens will be burnt.
-       * @param _amount The amount that will be burnt.
-       */
-    function _burnFrom(address _account, uint256 _amount) internal {
-        require(_amount <= allowed[_account][msg.sender]);
-    
-        // Should https://github.com/OpenZeppelin/zeppelin-solidity/issues/707 be accepted,
-        // this function needs to emit an event with the updated approval.
-        allowed[_account][msg.sender] = allowed[_account][msg.sender].sub(_amount);
-        _burn(_account, _amount);
-    }     
+
 }
-  
-  
