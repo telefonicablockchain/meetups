@@ -9,14 +9,14 @@ contract Token is IERC20 {
     using SafeMath for uint256;
     
     /* --- Atributos del TOKEN --- */ 
-    address public owner; // token owner
-    string public name;        // token name
-    string public symbol;          // token symbol
-    uint256 public decimals;            // token digit
-    uint256 private _totalSupply;           // token total supply
+    address public owner;           // token owner
+    string public name;             // token name
+    string public symbol;           // token symbol
+    uint256 public decimals;        // token digit
+    uint256 private _totalSupply;   // token total supply
 
-    mapping (address => uint256) private _balances;
-    mapping (address => mapping (address => uint256)) private _allowed;
+    mapping (address => uint256) private _balances;                         // Balances
+    mapping (address => mapping (address => uint256)) private _allowed;     // Allowances
     
     /* ---  Metodo Constructor ---  */  
     constructor(string memory _name, string memory _symbol, uint8 _decimals, uint128 _initialTotalSupply) public{
